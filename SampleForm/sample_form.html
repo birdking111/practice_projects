@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="core.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" media="screen">
+		<link rel="stylesheet" type="text/css" href="./style_rules.css" media="screen">
+	</head>
+	
+	<body ng-app="WebForms">
+		
+		<div class="Form" ng-controller="FormControl">
+		
+			<form name="courtForm" role="form" validate>
+				
+				<div class="form-group row" id="header">
+                    
+					<div class="col-md-6 col-md-offset-3">
+                        
+						<div class="content-box-centered">
+                            <label> IN THE DISTRICT COURT FOR THE STATE OF ALASKA AT </label>
+                            <input type="text" ng-model="user.courtNumber" required><br> <!-- Court Number -->
+
+                            <h1>REQUEST TO RESCHEDULE HEARING</h1>
+                        </div class="content-box-centered">
+                    
+					</div>
+				
+				</div>
+				
+				<div class="form-group row" id="caseData">
+					
+					<div class="col-md-6 col-md-offset-3">
+                        
+						<div class="content-box-left">
+                            <label>Case or Citation Number: </label>
+                            <input type="text" ng-model="user.caseNumber" ng-pattern="'^([0-9]{4})\\-([0-9]{6})\\-([A-Z]{2})$'" placeholder="####-######-AZ" required> <!-- Case Number -->
+                            <label> Current Hearing Date: </label>
+                            <input type="date" name="dateOfCrt" ng-change="changeLimit()" ng-model="user.hearingDate" min={{today}} max={{future}} placeholder="yyyy-mm-dd" required><br> <!-- Hearing Date -->
+
+                            <label>I request that my </label>
+                            <input type="radio" name="caseType" ng-model="user.caseType" value="trial" required> <!-- Type of case -->
+                            <label> trial </label>
+                            <input type="radio" name="caseType" ng-model="user.caseType" value="arraingment"> <!-- Type of case -->
+                            <label> arraignment be rescheduled because:</label><br>
+                        
+                            <!-- request for reschedule -->
+                            <textarea name="requestBox" onkeyup="displayCharCount()" ng-model="user.reschedReason" ng-minlength="50" ng-maxlength="200" required></textarea><br>
+							<label class="requestMsg"></label><br>
+							
+                        </div class="content-box-left">
+						
+						<!-- Unavailable Days -->
+                        <div class="content-box-left">
+                            <label>I will not be available on the following dates: </label><br/>
+                            <div id="prevEntries" ng-repeat="day in unavailDates">
+                                <input type="date" name="prevDate" min={{reschedLimit}} max={{future}} ng-model="unavailDates[$index]">
+                                <button type="button" ng-click="removeDate($index)">Remove</button>
+                                <br>
+                            </div>
+                            <input type="date" name="newDate" min={{reschedLimit}}  max={{future}} ng-model="newDay" placeholder="yyyy-mm-dd">
+                            <button type="button" ng-click="addDate(newDay)" ng-disabled="!(courtForm.newDate.$valid)">Add</button>
+							<br>
+							<label>
+								I understand that, under the Criminal Rule 45, I have a right to have my trial within 120 days from the 
+								date my request for trial was received by the court or the municipality, whicheer occurred first. However, 
+								I waive the right for the period of delay caused by this request.
+							</label>
+							<br>
+							<input type="checkbox" ng-model="user.waive" ng-required> I agree to the above statement</input>
+                        </div class="content-box-left">
+						
+					</div>
+				</div>
+				
+				<div class="form-group row" id="userInfo">
+					<div class="col-md-2 col-md-offset-3">
+                        <div class="content-box-left">
+                            <label>Date:</label> 
+							<input type="date" name="inputDate" ng-model="user.signedDate" placeholder="yyyy-mm-dd" required><br> <!-- Present Date -->
+                            <br>
+                            <br>
+                            <br>
+                            <button ng-click="submit(user)" ng-disabled="!(courtForm.$valid)">Submit Form</button>
+                        </div>
+					</div>
+					
+					<div class="col-md-3">
+                        
+						<div class="content-box-right">
+                            <label>Enter Name: </label>
+                            <input type="text" ng-model="user.name" placeholder="First Name" required> <!-- Name -->
+                            <input type="text" ng-model="user.surname" placeholder="Last Name" required><br> <!-- Name -->
+
+                            <label>Mailing Address: </label>
+                            <input type="text" name="stAddress" ng-model="user.address" ng-pattern="'^[0-9a-zA-Z. ]+$'" required><br> <!-- Address: consider better regex pattern-->
+
+                            <label>City: </label>
+                            <input type="text" ng-model="user.city" required> <!-- City -->
+
+                            <label> State: </label>
+                            <select ng-model="user.state" ng-options="st for st in stateList" required></select><br> <!--  State -->
+
+                            <label> Zip code: </label>
+                            <input type="text" name="zipCode" ng-model="user.zipCode" placeholder="#####" ng-pattern="'^[0-9]{5}$'" required><br> <!-- Zip -->
+
+                            <label>Primary Phone: </label>
+                            <input type="text" name="phoneNum" ng-model="user.phone" ng-pattern="'\\(([0-9]{3})\\)\\s([0-9]{3})\\-([0-9]{4})'" placeholder="(###) ###-####" required><br> <!-- Phone Number: better pattern needed -->
+                        </div class="content-box-right">
+					
+					</div>
+				
+				</div>
+				
+				<code>{{courtForm.$valid}}</code>
+				<br>
+				<br>
+				<code>{{user}}</code>
+				<br>
+				<br>
+				<code>{{data}}</code>
+				
+			</form>
+		</div>	
+	</body>
+</html>

@@ -1,0 +1,26 @@
+@import(http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css);
+
+div.Form form textarea
+{
+	resize: none;
+	width: 750px;
+	height: 105px;
+}
+
+div .content-box-centered
+{
+	margin: 0 auto;
+	text-align: center;
+}
+
+div .content-box-left
+{
+	margin: 0 auto;
+	text-align: left;
+}
+
+div .content-box-right
+{
+	margin: 0 auto;
+	text-align: right;
+}
